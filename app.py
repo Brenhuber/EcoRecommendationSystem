@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import scikit_learn as skl
+import Surprise as sp
 import os
 
 st.set_page_config(
