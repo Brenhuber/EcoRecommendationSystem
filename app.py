@@ -167,6 +167,7 @@ st.markdown(
 # ----------------------------------- DATA CLEANING -----------------------------------
 
 def load_and_clean_data(path):
+    
     df = pd.read_csv(path)
 
     df['price'] = pd.to_numeric(df['price'].astype(str).str.replace(r'[^\d.]+', '', regex=True),errors='coerce')
@@ -244,8 +245,8 @@ def find_top_rated_products(dataframe):
     
 def home():
     st.title("EcoRec")
-    st.write("Welcome to EcoRec! We help you make eco-friendly choices by recommending sustainable products.")
-    
+    st.write("Welcome to EcoRec! It's a platform dedicated to promoting eco-friendly products and helping you make eco-friendly choices by recommending sustainable products.")
+
     df = load_and_clean_data('amazon_eco-friendly_products.csv')
     cosine_sim = build_similarity(df)
 
@@ -284,12 +285,28 @@ def home():
         st.write("Enter a search term to get started.")
             
 def contact():
-    st.title("Contact Us")
+    st.title("Contact Me")
+    st.markdown("""
+    **LinkedIn:** [https://linkedin.com/in/brenhuber](https://linkedin.com/in/brenhuber)
     
+    **Email:** [brenhuberbusiness@gmail.com](mailto:brenhuberbusiness@gmail.com)
+    
+    **GitHub:** [https://github.com/Brenhuber](https://github.com/Brenhuber)
+    """)
+
 def about():
     st.title("About EcoRec")
-    st.write("EcoRec is a platform dedicated to promoting eco-friendly products.")
-    
+    st.write("""
+    EcoRec is a platform dedicated to promoting eco-friendly products and helping users make sustainable choices.
+    The app allows you to search for a wide range of eco-friendly products, filter them by category, price, and rating, 
+    and discover top-rated items. Using advanced text analysis and recommendation algorithms, EcoRec suggests similar 
+    products based on your interests, making it easier to find sustainable alternatives. It is built using Streamlit, 
+    a Python library for building interactive web applications, and it uses pandas for data manipulation and scikit-learn 
+    for machine learning. The app cleans and processes product data to ensure high-quality recommendations, and the user-friendly 
+    interface makes exploring green products simple and enjoyable. Join me on this eco-conscious journey in making a positive 
+    impact on the environment by choosing products that are better for the planet!"""
+    )
+
 pages = {
     "Home": home,
     "About": about,
