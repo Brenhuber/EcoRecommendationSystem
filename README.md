@@ -14,6 +14,7 @@
 - Search and filter eco-friendly products by name, category, or price  
 - Personalized recommendations based on your selection  
 - Always shows relevant recommendations (by similarity or top-rated)  
+- Visual insights with interactive Plotly charts  
 - Data cleaning for accurate results  
 - Modern, interactive UI  
 
@@ -25,6 +26,7 @@
 ![pandas](https://img.shields.io/badge/pandas-Data%20Handling-purple?logo=pandas)
 ![Streamlit](https://img.shields.io/badge/Streamlit-UI-red?logo=streamlit)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-blue?logo=scikit-learn)
+![Plotly](https://img.shields.io/badge/Plotly-Interactive%20Graphs-orange?logo=plotly)
 
 ---
 
@@ -39,7 +41,7 @@
    ```bash
    pip install -r requirements.txt
    # or with conda:
-   # conda install -c conda-forge streamlit pandas scikit-learn
+   # conda install -c conda-forge streamlit pandas scikit-learn plotly
    ```
 3. **Run the app:**
    ```bash
@@ -62,3 +64,4 @@
 - streamlit
 - pandas
 - scikit-learn
+- plotly
