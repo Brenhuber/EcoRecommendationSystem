@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
+import plotly.express as px
 import os
 
 st.set_page_config(
@@ -242,6 +243,13 @@ def set_price_range():
 def find_top_rated_products(dataframe):
     return dataframe[(dataframe['rating'] >= 4.5) & (dataframe['reviewsCount'] > 1)].sort_values(by='rating', ascending=False)
 
+def show_rating_distribution(df, title):
+    fig = px.histogram(df, x='rating', nbins=20, title=title, color_discrete_sequence=['#FF9900'])
+    st.plotly_chart(fig, use_container_width=True)
+
+def show_price_vs_rating(df, title):
+    fig = px.scatter(df, x='price', y='rating', hover_data=['name', 'brand'], title=title, color='rating', color_continuous_scale='Oranges')
+    st.plotly_chart(fig, use_container_width=True)
     
 def home():
     st.title("EcoRec")
@@ -272,11 +280,15 @@ def home():
             selected_product_name = filtered_df.loc[selected_idx, 'name']
             st.write(f'###### All {search_term} Products')
             st.dataframe(filtered_df[['name','category','material','brand','price','rating','reviewsCount']])
+            show_rating_distribution(filtered_df, f"Rating Distribution for '{search_term}' Products")
+            show_price_vs_rating(filtered_df, f"Price vs. Rating for '{search_term}' Products")
             recs = get_recommendations(selected_product_name, df, cosine_sim, n=5)
             if not recs.empty:
                 st.write("### Recommended for You")
                 st.dataframe(recs.sort_values(by=['name','brand','price','rating','reviewsCount'], ascending=False)
                              [['name','category','material','brand','price','rating','reviewsCount']])
+                show_rating_distribution(recs, "Rating Distribution for Recommended Products")
+                show_price_vs_rating(recs, "Price vs. Rating for Recommended Products")
             else:
                 st.write("No recommendations available for this selection.")
         else:
