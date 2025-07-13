@@ -167,24 +167,28 @@ st.markdown(
 
 # ----------------------------------- DATA CLEANING -----------------------------------
 
+@st.cache_data
 def load_and_clean_data(path):
-    
+
     df = pd.read_csv(path)
 
-    df['price'] = pd.to_numeric(df['price'].astype(str).str.replace(r'[^\d.]+', '', regex=True),errors='coerce')
+    df['price'] = pd.to_numeric(df['price'].astype(str).str.replace(r'[^\d.]+', '', regex=True), errors='coerce')
     df = df.dropna(subset=['price', 'material', 'brand', 'name', 'category', 'rating', 'reviewsCount'])
 
+    material_copy = df['material'].str.lower()
+
     color_names = [
-        'red', 'blue', 'green', 'yellow', 'black', 'white','orange','purple',
-        'pink','brown','gray','grey','beige','ivory','teal','navy','gold',
-        'silver','bronze','maroon','violet','indigo','turquoise','magenta',
-        'lime','peach','olive','coral','aqua','mint','mustard','lavender',
-        'tan','charcoal','burgundy','cream','amber','apricot','azure',
-        'chocolate','copper','crimson','cyan','emerald','fuchsia','jade',
-        'khaki','lemon','mauve','ochre','plum','rose','ruby','salmon',
-        'sapphire','scarlet','taupe','topaz','ultramarine','vermilion',
-        'wine','zinc'
+        'red', 'blue', 'green', 'yellow', 'black', 'white', 'orange', 'purple',
+        'pink', 'brown', 'gray', 'grey', 'beige', 'ivory', 'teal', 'navy', 'gold',
+        'silver', 'bronze', 'maroon', 'violet', 'indigo', 'turquoise', 'magenta',
+        'lime', 'peach', 'olive', 'coral', 'aqua', 'mint', 'mustard', 'lavender',
+        'tan', 'charcoal', 'burgundy', 'cream', 'amber', 'apricot', 'azure',
+        'chocolate', 'copper', 'crimson', 'cyan', 'emerald', 'fuchsia', 'jade',
+        'khaki', 'lemon', 'mauve', 'ochre', 'plum', 'rose', 'ruby', 'salmon',
+        'sapphire', 'scarlet', 'taupe', 'topaz', 'ultramarine', 'vermilion',
+        'wine', 'zinc'
     ]
+
     shape_names = [
         'circle', 'square', 'rectangle', 'triangle', 'oval', 'hexagon', 'octagon',
         'pentagon', 'cylinder', 'sphere', 'cube', 'cone', 'pyramid', 'diamond',
@@ -192,20 +196,22 @@ def load_and_clean_data(path):
         'parallelogram', 'trapezoid', 'semicircle', 'octahedron', 'tetrahedron',
         'dodecahedron', 'icosahedron', 'prism', 'cuboid'
     ]
-    
+
     color_regex = r'|'.join([fr'\b{c}\b' for c in color_names])
     shape_regex = r'|'.join([fr'\b{s}\b' for s in shape_names])
-    
+
     material_regex = (
-        r'"|\.|Count|Piece|scent|Scented|Scentless|Pack|ounces|oz|ml|g|kg|mm|'
-        r'In|Ft|ply|inches|CM|Gallons|Pounds|Free|^\d+$|'
+        r'"|\.|count|piece|scent|scented|scentless|pack|ounces|oz|ml|g|kg|mm|'
+        r'in|ft|ply|inches|cm|gallons|pounds|free|travel size|portable|all|^\d+$|'
         + color_regex + r'|' + shape_regex
     )
-    df = df[~df['material'].str.contains(material_regex, regex=True, case=False)]
+
+    df = df[~material_copy.str.contains(material_regex, regex=True, na=False)]
 
     def more_numbers_than_letters(s):
         s = str(s)
         return sum(c.isdigit() for c in s) > sum(c.isalpha() for c in s)
+
     df = df[~df['material'].apply(more_numbers_than_letters)]
 
     return df.reset_index(drop=True)
@@ -215,7 +221,7 @@ def load_and_clean_data(path):
 # ----------------------------------- RECOMMENDATION SYSTEM ----------------------------------- 
 
 def build_similarity(df):
-    df['text'] = df['name'] + ' ' + df['category']
+    df['text'] = df['name'] + ' ' + df['category'] + " " + df["material"]
     tfidf = TfidfVectorizer(stop_words='english')
     tfidf_matrix = tfidf.fit_transform(df['text'])
     cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
