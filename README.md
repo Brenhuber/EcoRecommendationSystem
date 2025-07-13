@@ -34,7 +34,7 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/eco-friendly-recommender.git
+   git clone https://github.com/Brenhuber/EcoRecommendationSystem.git
    cd EcoRec
    ```
 2. **Install dependencies:**
